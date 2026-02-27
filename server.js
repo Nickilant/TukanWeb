@@ -107,10 +107,7 @@ function createSlug(title) {
 
 app.get('/', (req, res) => {
   const articles = listArticlesStmt.all();
-  res.render('index', {
-    articles,
-    adminPathSecret
-  });
+  res.render('index', { articles });
 });
 
 app.get('/article/:slug', (req, res) => {
