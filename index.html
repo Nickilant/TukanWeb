@@ -331,6 +331,102 @@
     to { transform: rotate(360deg) translateX(180px) translateX(-4px); }
   }
 
+
+
+  .scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: rgba(232,232,232,0.75);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 10px;
+    font-weight: 600;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 3;
+  }
+
+  .scroll-hint-dot {
+    width: 22px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+
+  .scroll-hint-dot::before {
+    content: '';
+    width: 3px;
+    height: 7px;
+    border-radius: 3px;
+    background: var(--orange);
+    animation: scroll-dot 1.8s ease-in-out infinite;
+  }
+
+  .scroll-hint.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+    pointer-events: none;
+  }
+
+  @keyframes scroll-dot {
+    0% { transform: translateY(0); opacity: 0.9; }
+    45% { transform: translateY(11px); opacity: 0.25; }
+    100% { transform: translateY(0); opacity: 0.9; }
+  }
+
+
+  .to-top {
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,107,26,0.45);
+    background: rgba(17,17,17,0.9);
+    color: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 20px rgba(255,107,26,0.18);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.2s ease, background 0.2s ease;
+    z-index: 120;
+  }
+
+  .to-top svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .to-top:hover {
+    border-color: var(--orange);
+    background: rgba(26,26,26,0.96);
+  }
+
   /* SERVICES */
   #services {
     padding: 120px 60px;
@@ -410,11 +506,24 @@
   .service-card:hover::before { transform: scaleX(1); }
 
   .service-icon {
-    font-size: 40px;
+    width: 48px;
+    height: 48px;
     margin-bottom: 24px;
-    display: block;
-    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
     filter: drop-shadow(0 0 12px rgba(255,107,26,0.4));
+  }
+
+  .service-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .service-num {
@@ -904,6 +1013,8 @@
     #hero { padding: 100px 24px 60px; }
     .hero-inner { grid-template-columns: 1fr; }
     .hero-visual { display: none; }
+    .scroll-hint { bottom: 14px; }
+    .to-top { right: 16px; bottom: 16px; width: 42px; height: 42px; }
     #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
     .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: 1fr; }
@@ -1052,6 +1163,14 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-trail" id="cursor-trail"></div>
 
+
+<a href="#hero" class="to-top" id="to-top" aria-label="Наверх">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 17V7"></path>
+    <path d="M7.5 11.5 12 7l4.5 4.5"></path>
+  </svg>
+</a>
+
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">
@@ -1105,6 +1224,11 @@
       </div>
     </div>
   </div>
+  <a href="#services" class="scroll-hint" id="scroll-hint" aria-label="Листать вниз к услугам">
+    <span>Листайте вниз</span>
+    <span class="scroll-hint-dot" aria-hidden="true"></span>
+  </a>
+
 </section>
 
 <!-- SERVICES -->
@@ -1116,37 +1240,77 @@
   <div class="services-grid">
     <div class="service-card fade-up">
       <span class="service-num">01</span>
-      <span class="service-icon">🌐</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="17"></circle>
+          <path d="M7 24h34"></path>
+          <path d="M24 7c5 5 8 10.5 8 17s-3 12-8 17"></path>
+          <path d="M24 7c-5 5-8 10.5-8 17s3 12 8 17"></path>
+        </svg>
+      </span>
       <h3 class="service-name">Корпоративные сайты</h3>
       <p class="service-desc">Многостраничные сайты с уникальным дизайном, CMS и SEO-оптимизацией для роста органического трафика.</p>
     </div>
     <div class="service-card fade-up" style="transition-delay:0.1s">
       <span class="service-num">02</span>
-      <span class="service-icon">🚀</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <rect x="8" y="9" width="32" height="30" rx="5"></rect>
+          <path d="M13 16h22"></path>
+          <path d="M16 30l6-6 4 4 7-8"></path>
+          <circle cx="33" cy="20" r="1.5"></circle>
+        </svg>
+      </span>
       <h3 class="service-name">Лендинги</h3>
       <p class="service-desc">Высококонверсионные посадочные страницы с A/B тестированием и аналитикой — запуск за 48 часов.</p>
     </div>
     <div class="service-card fade-up" style="transition-delay:0.2s">
       <span class="service-num">03</span>
-      <span class="service-icon">🛒</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <circle cx="19" cy="36" r="2.5"></circle>
+          <circle cx="32" cy="36" r="2.5"></circle>
+          <path d="M7 11h6l3.5 16h17l3.5-11H14"></path>
+          <path d="M18 31h16"></path>
+        </svg>
+      </span>
       <h3 class="service-name">Интернет-магазины</h3>
       <p class="service-desc">Полнофункциональные e-commerce решения с каталогом, корзиной, оплатой и интеграцией с CRM.</p>
     </div>
     <div class="service-card fade-up" style="transition-delay:0.1s">
       <span class="service-num">04</span>
-      <span class="service-icon">⚡</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <rect x="8" y="10" width="32" height="24" rx="4"></rect>
+          <path d="M28 38H20"></path>
+          <path d="M24 34v4"></path>
+          <path d="M26 15l-5 8h5l-4 7"></path>
+        </svg>
+      </span>
       <h3 class="service-name">Веб-приложения</h3>
       <p class="service-desc">SaaS-платформы, личные кабинеты, порталы на React, Vue с RESTful API и масштабируемой архитектурой.</p>
     </div>
     <div class="service-card fade-up" style="transition-delay:0.2s">
       <span class="service-num">05</span>
-      <span class="service-icon">🎨</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <path d="M24 8c-8.8 0-16 6.2-16 13.8C8 29 14 34 20 34h2a4 4 0 014 4c0 1.7 1.4 3 3.1 3 6.3 0 10.9-6 10.9-13.2C40 16.3 33.2 8 24 8z"></path>
+          <circle cx="16" cy="20" r="1.8"></circle>
+          <circle cx="21" cy="16" r="1.8"></circle>
+          <circle cx="27" cy="16" r="1.8"></circle>
+          <circle cx="31" cy="21" r="1.8"></circle>
+        </svg>
+      </span>
       <h3 class="service-name">UI/UX Дизайн</h3>
       <p class="service-desc">Пользовательские исследования, прототипы, дизайн-системы и интерфейсы, которые понравятся людям.</p>
     </div>
     <div class="service-card fade-up" style="transition-delay:0.3s">
       <span class="service-num">06</span>
-      <span class="service-icon">🔧</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <path d="M29 11a8 8 0 00-9 10l-9.5 9.5a3 3 0 000 4.2l1.8 1.8a3 3 0 004.2 0L26 27a8 8 0 0010-9l-5 5-4-4 5-8z"></path>
+        </svg>
+      </span>
       <h3 class="service-name">Поддержка и SEO</h3>
       <p class="service-desc">Техническая поддержка 24/7, обновления, хостинг и продвижение для стабильного роста позиций.</p>
     </div>
@@ -1386,7 +1550,7 @@
     <li><a href="#services">Услуги</a></li>
     <li><a href="#portfolio">Работы</a></li>
     <li><a href="#pricing">Тарифы</a></li>
-    <li><a href="#">Политика</a></li>
+    <li><a href="blog.html">Блог</a></li>
   </ul>
   <div class="footer-copy">© 2026 Tukan Web Studio</div>
 </footer>
@@ -1551,6 +1715,17 @@
   setTimeout(() => {
     document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
   }, 100);
+
+
+  const scrollHint = document.getElementById('scroll-hint');
+  const toTopBtn = document.getElementById('to-top');
+  const toggleScrollUi = () => {
+    const isScrolled = window.scrollY > 12;
+    if (scrollHint) scrollHint.classList.toggle('is-hidden', isScrolled);
+    if (toTopBtn) toTopBtn.classList.toggle('visible', isScrolled);
+  };
+  window.addEventListener('scroll', toggleScrollUi, { passive: true });
+  toggleScrollUi();
 
   // ─── Telegram Bot ───
   // Замените на ваши данные:
