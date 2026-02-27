@@ -331,6 +331,58 @@
     to { transform: rotate(360deg) translateX(180px) translateX(-4px); }
   }
 
+
+
+  .scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: rgba(232,232,232,0.75);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 10px;
+    font-weight: 600;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 3;
+  }
+
+  .scroll-hint-dot {
+    width: 22px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+
+  .scroll-hint-dot::before {
+    content: '';
+    width: 3px;
+    height: 7px;
+    border-radius: 3px;
+    background: var(--orange);
+    animation: scroll-dot 1.8s ease-in-out infinite;
+  }
+
+  .scroll-hint.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+    pointer-events: none;
+  }
+
+  @keyframes scroll-dot {
+    0% { transform: translateY(0); opacity: 0.9; }
+    45% { transform: translateY(11px); opacity: 0.25; }
+    100% { transform: translateY(0); opacity: 0.9; }
+  }
+
   /* SERVICES */
   #services {
     padding: 120px 60px;
@@ -917,6 +969,7 @@
     #hero { padding: 100px 24px 60px; }
     .hero-inner { grid-template-columns: 1fr; }
     .hero-visual { display: none; }
+    .scroll-hint { bottom: 14px; }
     #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
     .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: 1fr; }
@@ -1118,6 +1171,11 @@
       </div>
     </div>
   </div>
+  <a href="#services" class="scroll-hint" id="scroll-hint" aria-label="Листать вниз к услугам">
+    <span>Листайте вниз</span>
+    <span class="scroll-hint-dot" aria-hidden="true"></span>
+  </a>
+
 </section>
 
 <!-- SERVICES -->
@@ -1604,6 +1662,15 @@
   setTimeout(() => {
     document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
   }, 100);
+
+
+  const scrollHint = document.getElementById('scroll-hint');
+  const toggleScrollHint = () => {
+    if (!scrollHint) return;
+    scrollHint.classList.toggle('is-hidden', window.scrollY > 12);
+  };
+  window.addEventListener('scroll', toggleScrollHint, { passive: true });
+  toggleScrollHint();
 
   // ─── Telegram Bot ───
   // Замените на ваши данные:
