@@ -383,6 +383,50 @@
     100% { transform: translateY(0); opacity: 0.9; }
   }
 
+
+  .to-top {
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,107,26,0.45);
+    background: rgba(17,17,17,0.9);
+    color: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 20px rgba(255,107,26,0.18);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.2s ease, background 0.2s ease;
+    z-index: 120;
+  }
+
+  .to-top svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .to-top:hover {
+    border-color: var(--orange);
+    background: rgba(26,26,26,0.96);
+  }
+
   /* SERVICES */
   #services {
     padding: 120px 60px;
@@ -970,6 +1014,7 @@
     .hero-inner { grid-template-columns: 1fr; }
     .hero-visual { display: none; }
     .scroll-hint { bottom: 14px; }
+    .to-top { right: 16px; bottom: 16px; width: 42px; height: 42px; }
     #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
     .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
     .portfolio-grid { grid-template-columns: 1fr; }
@@ -1117,6 +1162,14 @@
 <canvas id="bg-canvas"></canvas>
 <div class="cursor" id="cursor"></div>
 <div class="cursor-trail" id="cursor-trail"></div>
+
+
+<a href="#hero" class="to-top" id="to-top" aria-label="Наверх">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 17V7"></path>
+    <path d="M7.5 11.5 12 7l4.5 4.5"></path>
+  </svg>
+</a>
 
 <!-- NAV -->
 <nav>
@@ -1665,12 +1718,14 @@
 
 
   const scrollHint = document.getElementById('scroll-hint');
-  const toggleScrollHint = () => {
-    if (!scrollHint) return;
-    scrollHint.classList.toggle('is-hidden', window.scrollY > 12);
+  const toTopBtn = document.getElementById('to-top');
+  const toggleScrollUi = () => {
+    const isScrolled = window.scrollY > 12;
+    if (scrollHint) scrollHint.classList.toggle('is-hidden', isScrolled);
+    if (toTopBtn) toTopBtn.classList.toggle('visible', isScrolled);
   };
-  window.addEventListener('scroll', toggleScrollHint, { passive: true });
-  toggleScrollHint();
+  window.addEventListener('scroll', toggleScrollUi, { passive: true });
+  toggleScrollUi();
 
   // ─── Telegram Bot ───
   // Замените на ваши данные:
