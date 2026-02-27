@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tukan Blog</title>
+    <link rel="stylesheet" href="/public/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Tukan Blog</h1>
+        <p>Полноценный блог на Node.js + SQLite</p>
+        <a class="admin-link" href="/admin/<%= adminPathSecret %>/login">Секретный вход в админку</a>
+      </header>
+
+      <section class="posts">
+        <% if (articles.length === 0) { %>
+          <p>Пока нет статей — создайте первую через админку.</p>
+        <% } %>
+
+        <% articles.forEach((article) => { %>
+          <article class="card">
+            <h2><a href="/article/<%= article.slug %>"><%= article.title %></a></h2>
+            <p><%= article.excerpt %></p>
+            <small><%= new Date(article.created_at).toLocaleString('ru-RU') %></small>
+          </article>
+        <% }) %>
+      </section>
+    </main>
+  </body>
+</html>

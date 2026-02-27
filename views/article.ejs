@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= article.title %> | Tukan Blog</title>
+    <link rel="stylesheet" href="/public/style.css" />
+  </head>
+  <body>
+    <main class="container article-page">
+      <a href="/">← Назад к списку</a>
+      <h1><%= article.title %></h1>
+      <small><%= new Date(article.created_at).toLocaleString('ru-RU') %></small>
+      <article class="article-content"><%- article.content_html %></article>
+    </main>
+  </body>
+</html>

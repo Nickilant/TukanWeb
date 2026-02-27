@@ -1,0 +1,79 @@
+:root {
+  color-scheme: light dark;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #0f1220;
+  color: #f0f2ff;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+.header, .admin-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: #1a1f35;
+  border: 1px solid #2f3552;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 14px 0;
+}
+
+a { color: #87c4ff; }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input, textarea, button {
+  border-radius: 10px;
+  border: 1px solid #3d4569;
+  background: #12162b;
+  color: #f0f2ff;
+  padding: 10px 12px;
+}
+
+button, .btn {
+  width: fit-content;
+  cursor: pointer;
+  background: #3576f6;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.article-content {
+  margin-top: 16px;
+  background: #1a1f35;
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid #2f3552;
+  line-height: 1.6;
+}
+
+.error { color: #ff8f8f; }
+
+#editor {
+  background: white;
+  color: black;
+  min-height: 240px;
+}
+
+.admin-link {
+  opacity: 0.9;
+}

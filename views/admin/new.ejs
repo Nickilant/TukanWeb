@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Новая статья</title>
+    <link rel="stylesheet" href="/public/style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Создать статью</h1>
+      <% if (error) { %><p class="error"><%= error %></p><% } %>
+      <form method="post" action="/admin/<%= secret %>/new" class="form" id="article-form">
+        <label>Заголовок</label>
+        <input type="text" name="title" required />
+
+        <label>Краткое описание</label>
+        <textarea name="excerpt" rows="3" required></textarea>
+
+        <label>Текст статьи</label>
+        <div id="editor"></div>
+        <input type="hidden" name="contentHtml" id="contentHtml" />
+
+        <button type="submit">Опубликовать</button>
+      </form>
+      <a href="/admin/<%= secret %>">← Назад в админку</a>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script>
+      const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ]
+        }
+      });
+
+      document.getElementById('article-form').addEventListener('submit', (event) => {
+        const html = quill.root.innerHTML.trim();
+        if (html === '<p><br></p>' || !html) {
+          event.preventDefault();
+          alert('Добавьте текст статьи');
+          return;
+        }
+        document.getElementById('contentHtml').value = html;
+      });
+    </script>
+  </body>
+</html>

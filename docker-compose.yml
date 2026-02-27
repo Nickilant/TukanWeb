@@ -1,0 +1,11 @@
+services:
+  blog:
+    build: .
+    container_name: tukan_blog
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
