@@ -58,3 +58,8 @@ VITE_TG_CHAT_ID=...
 ```
 
 В коде они читаются в `src/landing-script.js` через `import.meta.env`.
+
+## Роуты
+
+- `/` — лендинг
+- `/blog` — блог (человекочитаемый URL вместо `blog.html`)
