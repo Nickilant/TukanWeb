@@ -628,13 +628,23 @@
     background: rgba(255,107,26,0.02);
   }
 
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto auto;
-    gap: 20px;
+  .portfolio-carousel {
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
+    padding: 0 64px;
+  }
+
+  .portfolio-track-wrap {
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .portfolio-track {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    will-change: transform;
   }
 
   .portfolio-item {
@@ -646,11 +656,7 @@
     aspect-ratio: 4/3;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-  }
-
-  .portfolio-item:first-child {
-    grid-column: span 2;
-    aspect-ratio: 16/7;
+    flex: 0 0 clamp(260px, 30vw, 360px);
   }
 
   .portfolio-item:hover {
@@ -696,6 +702,31 @@
     color: #fff;
     letter-spacing: 0.04em;
   }
+
+  .portfolio-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(17,17,17,0.88);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    z-index: 2;
+  }
+  .portfolio-arrow:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: rgba(26,26,26,0.96);
+  }
+  .portfolio-arrow.prev { left: 8px; }
+  .portfolio-arrow.next { right: 8px; }
 
   /* TESTIMONIALS */
   #testimonials {
@@ -1039,8 +1070,9 @@
     .to-top { right: 16px; bottom: 16px; width: 42px; height: 42px; }
     #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
     .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
-    .portfolio-grid { grid-template-columns: 1fr; }
-    .portfolio-item:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+    .portfolio-carousel { padding: 0 52px; }
+    .portfolio-item { flex-basis: 80vw; max-width: 360px; }
+    .portfolio-arrow { width: 40px; height: 40px; }
     footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
     .footer-links { flex-wrap: wrap; justify-content: center; }
     .cta-form { flex-direction: column; }
@@ -1390,42 +1422,48 @@
     <div class="section-tag">Наши работы</div>
     <h2 class="section-title">Порт<span>фолио</span></h2>
   </div>
-  <div class="portfolio-grid">
-    <div class="portfolio-item fade-up">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #0D1B2A, #1B3A4B);">🏢</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Корпоративный сайт</div>
-        <div class="portfolio-title">TechCorp Solutions</div>
+  <div class="portfolio-carousel fade-up">
+    <button class="portfolio-arrow prev" id="portfolio-prev" aria-label="Предыдущий проект">❮</button>
+    <div class="portfolio-track-wrap">
+      <div class="portfolio-track" id="portfolio-track">
+        <div class="portfolio-item">
+          <div class="portfolio-bg" style="background: linear-gradient(135deg, #0D1B2A, #1B3A4B);">🏢</div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Корпоративный сайт</div>
+            <div class="portfolio-title">TechCorp Solutions</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0A00, #3A1800);">🛍️</div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">E-commerce</div>
+            <div class="portfolio-title">FashionStore</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg" style="background: linear-gradient(135deg, #001A0A, #003520);">📊</div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">SaaS Dashboard</div>
+            <div class="portfolio-title">FinTrack Pro</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0020, #300040);">🚀</div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Лендинг</div>
+            <div class="portfolio-title">LaunchPad Agency</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A1000, #2A2000);">🍕</div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Food Delivery</div>
+            <div class="portfolio-title">TastyDelivery</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="portfolio-item fade-up">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0A00, #3A1800);">🛍️</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">E-commerce</div>
-        <div class="portfolio-title">FashionStore</div>
-      </div>
-    </div>
-    <div class="portfolio-item fade-up" style="transition-delay:0.1s">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #001A0A, #003520);">📊</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">SaaS Dashboard</div>
-        <div class="portfolio-title">FinTrack Pro</div>
-      </div>
-    </div>
-    <div class="portfolio-item fade-up" style="transition-delay:0.2s">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0020, #300040);">🚀</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Лендинг</div>
-        <div class="portfolio-title">LaunchPad Agency</div>
-      </div>
-    </div>
-    <div class="portfolio-item fade-up" style="transition-delay:0.3s">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A1000, #2A2000);">🍕</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Food Delivery</div>
-        <div class="portfolio-title">TastyDelivery</div>
-      </div>
-    </div>
+    <button class="portfolio-arrow next" id="portfolio-next" aria-label="Следующий проект">❯</button>
   </div>
 </section>
 
@@ -1753,6 +1791,72 @@
   };
   window.addEventListener('scroll', toggleScrollUi, { passive: true });
   toggleScrollUi();
+
+  // ─── Portfolio carousel ───
+  const portfolioTrack = document.getElementById('portfolio-track');
+  const portfolioPrev = document.getElementById('portfolio-prev');
+  const portfolioNext = document.getElementById('portfolio-next');
+
+  if (portfolioTrack && portfolioPrev && portfolioNext) {
+    const ORIGINAL_ITEMS = Array.from(portfolioTrack.children);
+    portfolioTrack.innerHTML += portfolioTrack.innerHTML;
+
+    let offset = 0;
+    let baseWidth = 1;
+    let lastFrame = performance.now();
+    let pauseUntil = 0;
+    const speed = 18; // px per second
+
+    const normalizeOffset = () => {
+      while (offset >= baseWidth) offset -= baseWidth;
+      while (offset < 0) offset += baseWidth;
+    };
+
+    const recalcCarousel = () => {
+      const firstItem = portfolioTrack.querySelector('.portfolio-item');
+      const gap = parseFloat(getComputedStyle(portfolioTrack).columnGap || getComputedStyle(portfolioTrack).gap || 20);
+      const itemWidth = firstItem ? firstItem.getBoundingClientRect().width : 320;
+      const total = (itemWidth + gap) * ORIGINAL_ITEMS.length;
+      baseWidth = Math.max(total, 1);
+      normalizeOffset();
+      portfolioTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+    };
+
+    const pauseAutoplay = () => {
+      pauseUntil = Date.now() + 30000;
+    };
+
+    const moveByStep = dir => {
+      const firstItem = portfolioTrack.querySelector('.portfolio-item');
+      const gap = parseFloat(getComputedStyle(portfolioTrack).columnGap || getComputedStyle(portfolioTrack).gap || 20);
+      const step = (firstItem ? firstItem.getBoundingClientRect().width : 320) + gap;
+      offset += step * dir;
+      normalizeOffset();
+      portfolioTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+      pauseAutoplay();
+    };
+
+    portfolioPrev.addEventListener('click', () => moveByStep(-1));
+    portfolioNext.addEventListener('click', () => moveByStep(1));
+    window.addEventListener('resize', recalcCarousel);
+
+    recalcCarousel();
+
+    const animateCarousel = now => {
+      const dt = (now - lastFrame) / 1000;
+      lastFrame = now;
+
+      if (Date.now() >= pauseUntil) {
+        offset += speed * dt;
+        normalizeOffset();
+        portfolioTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+      }
+
+      requestAnimationFrame(animateCarousel);
+    };
+
+    requestAnimationFrame(animateCarousel);
+  }
 
   // ─── Telegram Bot ───
   // Замените на ваши данные:
