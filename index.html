@@ -665,14 +665,23 @@
   }
 
   .portfolio-bg {
-    width: 100%; height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 60px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #151515;
+  }
+
+  .portfolio-bg img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1);
     transition: transform 0.4s;
   }
-  .portfolio-item:hover .portfolio-bg { transform: scale(1.08); }
+
+  .portfolio-item:hover .portfolio-bg img { transform: scale(1.08); }
 
   .portfolio-overlay {
     position: absolute;
@@ -1427,35 +1436,35 @@
     <div class="portfolio-track-wrap">
       <div class="portfolio-track" id="portfolio-track">
         <div class="portfolio-item">
-          <div class="portfolio-bg" style="background: linear-gradient(135deg, #0D1B2A, #1B3A4B);">🏢</div>
+          <div class="portfolio-bg"><img src="https://placehold.co/1400x900/1B3A4B/FFFFFF?text=TechCorp+Solutions" alt="TechCorp Solutions"></div>
           <div class="portfolio-overlay">
             <div class="portfolio-cat">Корпоративный сайт</div>
             <div class="portfolio-title">TechCorp Solutions</div>
           </div>
         </div>
         <div class="portfolio-item">
-          <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0A00, #3A1800);">🛍️</div>
+          <div class="portfolio-bg"><img src="https://placehold.co/900x1400/3A1800/FFFFFF?text=FashionStore" alt="FashionStore"></div>
           <div class="portfolio-overlay">
             <div class="portfolio-cat">E-commerce</div>
             <div class="portfolio-title">FashionStore</div>
           </div>
         </div>
         <div class="portfolio-item">
-          <div class="portfolio-bg" style="background: linear-gradient(135deg, #001A0A, #003520);">📊</div>
+          <div class="portfolio-bg"><img src="https://placehold.co/1600x700/003520/FFFFFF?text=FinTrack+Pro" alt="FinTrack Pro"></div>
           <div class="portfolio-overlay">
             <div class="portfolio-cat">SaaS Dashboard</div>
             <div class="portfolio-title">FinTrack Pro</div>
           </div>
         </div>
         <div class="portfolio-item">
-          <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0020, #300040);">🚀</div>
+          <div class="portfolio-bg"><img src="https://placehold.co/800x1200/300040/FFFFFF?text=LaunchPad+Agency" alt="LaunchPad Agency"></div>
           <div class="portfolio-overlay">
             <div class="portfolio-cat">Лендинг</div>
             <div class="portfolio-title">LaunchPad Agency</div>
           </div>
         </div>
         <div class="portfolio-item">
-          <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A1000, #2A2000);">🍕</div>
+          <div class="portfolio-bg"><img src="https://placehold.co/2000x800/2A2000/FFFFFF?text=TastyDelivery" alt="TastyDelivery"></div>
           <div class="portfolio-overlay">
             <div class="portfolio-cat">Food Delivery</div>
             <div class="portfolio-title">TastyDelivery</div>
