@@ -11,7 +11,7 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
+  body.blog-page {
     font-family: 'Montserrat', sans-serif;
     color: var(--text);
     background:

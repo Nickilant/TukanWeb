@@ -8,9 +8,14 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (!containerRef.current) return undefined;
+    document.body.classList.add('landing-page');
+    document.body.classList.remove('blog-page');
     containerRef.current.innerHTML = landingMarkup;
     const cleanup = initLanding();
-    return () => cleanup?.();
+    return () => {
+      cleanup?.();
+      document.body.classList.remove('landing-page');
+    };
   }, []);
 
   return <div ref={containerRef} />;
