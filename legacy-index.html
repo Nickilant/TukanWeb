@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tukan Web Studio — Сайты, которые работают</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B1A;
+    --orange-light: #FF8C42;
+    --yellow: #FFD700;
+    --green: #3DAA5C;
+    --dark: #0A0A0A;
+    --dark2: #111111;
+    --dark3: #1A1A1A;
+    --gray: #2A2A2A;
+    --text: #E8E8E8;
+    --text-muted: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--orange);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    top: 0; left: 0;
+    will-change: transform;
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-trail {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--orange);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    top: 0; left: 0;
+    will-change: transform;
+    transition: width 0.2s, height 0.2s, border-color 0.2s;
+    opacity: 0.6;
+  }
+  .cursor.is-hovering { width: 20px; height: 20px; }
+  .cursor-trail.is-hovering { width: 60px; height: 60px; border-color: var(--yellow); }
+
+  /* Canvas background */
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 10px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,10,0.7);
+    border-bottom: 1px solid rgba(255,107,26,0.15);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    height: 64px;
+    width: auto;
+    filter: drop-shadow(0 0 8px rgba(255,107,26,0.5)) brightness(1.15);
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--orange); }
+
+  .nav-cta {
+    background: var(--orange);
+    color: #fff !important;
+    padding: 10px 24px !important;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--orange-light) !important; transform: translateY(-1px); }
+
+  /* Sections */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 80px;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-label::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--orange);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 8vw, 110px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    color: #fff;
+  }
+  .hero-title span {
+    color: var(--orange);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-top: 28px;
+    max-width: 440px;
+    font-weight: 300;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    margin-top: 44px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--orange);
+    color: #fff;
+    padding: 16px 36px;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(255,107,26,0.3);
+  }
+  .btn-primary:hover {
+    background: var(--orange-light);
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(255,107,26,0.5);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 16px 36px;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 46px;
+    color: #fff;
+    line-height: 1;
+  }
+  .stat-val span { color: var(--orange); }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .hero-logo-wrap {
+    position: relative;
+    width: 420px;
+    height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-logo-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,107,26,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .hero-logo-wrap::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(255,107,26,0.2);
+    border-radius: 50%;
+    animation: orbit 8s linear infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  @keyframes orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .hero-logo-wrap img {
+    width: 340px;
+    height: auto;
+    filter: drop-shadow(0 0 40px rgba(255,107,26,0.4));
+    animation: float 4s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-16px); }
+  }
+
+  /* Orbit dots */
+  .orbit-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform-origin: 0 0;
+    animation: orbit-dot 8s linear infinite;
+  }
+  .orbit-dot:nth-child(2) { background: var(--yellow); animation-duration: 12s; animation-delay: -4s; width: 5px; height: 5px; }
+  .orbit-dot:nth-child(3) { background: var(--green); animation-duration: 6s; width: 6px; height: 6px; }
+
+  @keyframes orbit-dot {
+    from { transform: rotate(0deg) translateX(180px) translateX(-4px); }
+    to { transform: rotate(360deg) translateX(180px) translateX(-4px); }
+  }
+
+
+
+  .scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: rgba(232,232,232,0.75);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 10px;
+    font-weight: 600;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 3;
+  }
+
+  .scroll-hint-dot {
+    width: 22px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+
+  .scroll-hint-dot::before {
+    content: '';
+    width: 3px;
+    height: 7px;
+    border-radius: 3px;
+    background: var(--orange);
+    animation: scroll-dot 1.8s ease-in-out infinite;
+  }
+
+  .scroll-hint.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+    pointer-events: none;
+  }
+
+  @keyframes scroll-dot {
+    0% { transform: translateY(0); opacity: 0.9; }
+    45% { transform: translateY(11px); opacity: 0.25; }
+    100% { transform: translateY(0); opacity: 0.9; }
+  }
+
+
+  .to-top {
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,107,26,0.45);
+    background: rgba(17,17,17,0.9);
+    color: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 20px rgba(255,107,26,0.18);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.2s ease, background 0.2s ease;
+    z-index: 120;
+  }
+
+  .to-top svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .to-top:hover {
+    border-color: var(--orange);
+    background: rgba(26,26,26,0.96);
+  }
+
+  /* SERVICES */
+  #services {
+    padding: 120px 60px;
+    background: linear-gradient(180deg, transparent 0%, rgba(255,107,26,0.03) 50%, transparent 100%);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .section-tag::before, .section-tag::after {
+    content: '';
+    display: block;
+    width: 30px; height: 1px;
+    background: var(--orange);
+    opacity: 0.6;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 6vw, 72px);
+    color: #fff;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+  .section-title span { color: var(--orange); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .service-card {
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--yellow));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .service-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,107,26,0.25);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(255,107,26,0.08);
+  }
+
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
+    filter: drop-shadow(0 0 12px rgba(255,107,26,0.4));
+  }
+
+  .service-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .service-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    top: 16px; right: 20px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .service-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: #fff;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+
+  .service-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* PROCESS */
+  #process {
+    padding: 120px 60px;
+  }
+
+  .process-steps {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--orange), var(--orange), transparent);
+    opacity: 0.3;
+  }
+
+  .process-step {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    padding: 36px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .process-step:hover { transform: translateX(8px); }
+  .process-step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    width: 56px; height: 56px;
+    background: var(--dark3);
+    border: 1px solid rgba(255,107,26,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .process-step:hover .step-num {
+    background: var(--orange);
+    color: #fff;
+    border-color: var(--orange);
+  }
+
+  .step-content h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: #fff;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+
+  .step-content p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 600px;
+  }
+
+  /* PORTFOLIO */
+  #portfolio {
+    padding: 120px 60px;
+    background: rgba(255,107,26,0.02);
+  }
+
+  .portfolio-carousel {
+    max-width: 1360px;
+    margin: 0 auto;
+    position: relative;
+    padding: 0 56px;
+  }
+
+  .portfolio-track-wrap {
+    overflow: hidden;
+    border-radius: 12px;
+    padding: 16px 14px;
+  }
+
+  .portfolio-track {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    will-change: transform;
+  }
+
+  .portfolio-item {
+    background: var(--dark3);
+    border: 1px solid rgba(255,107,26,0.45);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 4/3;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    flex: 0 0 calc((100% - 40px) / 3);
+  }
+
+  .portfolio-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 36px rgba(255,107,26,0.2);
+  }
+
+  .portfolio-bg {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #151515;
+  }
+
+  .portfolio-bg img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1);
+    transition: transform 0.4s;
+  }
+
+  .portfolio-item:hover .portfolio-bg img { transform: scale(1.08); }
+
+  .portfolio-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+
+  .portfolio-cat {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  .portfolio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  .portfolio-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(17,17,17,0.88);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    z-index: 2;
+  }
+  .portfolio-arrow:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: rgba(26,26,26,0.96);
+  }
+  .portfolio-arrow.prev { left: 8px; }
+  .portfolio-arrow.next { right: 8px; }
+
+  /* TESTIMONIALS */
+  #testimonials {
+    padding: 120px 60px;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .testimonial-card {
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 36px;
+    position: relative;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,107,26,0.2);
+  }
+
+  .quote-mark {
+    font-family: Georgia, serif;
+    font-size: 80px;
+    color: var(--orange);
+    opacity: 0.3;
+    position: absolute;
+    top: 8px; left: 28px;
+    line-height: 1;
+  }
+
+  .testimonial-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-top: 20px;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .author-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .author-role {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .stars {
+    color: var(--yellow);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  /* PRICING */
+  #pricing {
+    padding: 120px 60px;
+    background: rgba(255,107,26,0.02);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pricing-card {
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 44px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .pricing-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  }
+
+  .pricing-card.featured {
+    border-color: var(--orange);
+    background: linear-gradient(160deg, rgba(255,107,26,0.08), var(--dark3));
+    box-shadow: 0 0 60px rgba(255,107,26,0.15);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: var(--orange);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .pricing-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--orange);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .pricing-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pricing-price small {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  .pricing-period {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    font-weight: 300;
+  }
+
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 36px;
+  }
+
+  .pricing-features li {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 300;
+  }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .pricing-features li.disabled {
+    opacity: 0.35;
+  }
+  .pricing-features li.disabled::before {
+    content: '✕';
+    color: #666;
+  }
+
+  /* CTA */
+  #cta {
+    padding: 120px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #cta::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,107,26,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 88px);
+    color: #fff;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 24px;
+  }
+  .cta-title span { color: var(--orange); }
+
+  .cta-sub {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 48px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-form {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .cta-input {
+    flex: 1;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding: 16px 20px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .cta-input::placeholder { color: var(--text-muted); }
+  .cta-input:focus { border-color: var(--orange); }
+
+  /* FOOTER */
+  footer {
+    padding: 60px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,0,0,0.4);
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-logo img { 
+    height: 56px;
+    width: auto;
+    filter: drop-shadow(0 0 8px rgba(255,107,26,0.5)) brightness(1.15);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--orange); }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .footer-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .footer-social:hover {
+    color: var(--orange);
+    border-color: var(--orange);
+    transform: translateY(-2px);
+  }
+  .footer-social svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  /* Scroll animations */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #hero { padding: 100px 24px 60px; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .scroll-hint { bottom: 14px; }
+    .to-top { right: 16px; bottom: 16px; width: 42px; height: 42px; }
+    #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
+    .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
+    .portfolio-carousel { padding: 0 48px; }
+    .portfolio-item { flex-basis: 84vw; max-width: 520px; }
+    .portfolio-arrow { width: 40px; height: 40px; }
+    footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+    .cta-form { flex-direction: column; }
+    body { cursor: auto; }
+    .cursor, .cursor-trail { display: none; }
+  }
+
+  /* ─── SEND ANIMATION ─── */
+  #cta-form-wrap {
+    position: relative;
+    height: 56px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* Пилюля с инпутом и кнопкой */
+  #cta-pill {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  #cta-pill.hidden {
+    opacity: 0;
+    transform: scale(0.85);
+    pointer-events: none;
+  }
+
+  /* Кружок-лоадер */
+  #cta-loader {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 60px; height: 60px;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+    pointer-events: none;
+  }
+  #cta-loader.visible {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  #cta-loader.explode {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+    transition: transform 0.5s ease-out, opacity 0.4s ease-out;
+  }
+
+  #loader-ring {
+    width: 60px; height: 60px;
+    animation: none;
+    display: block;
+  }
+  #loader-ring.spinning circle:last-child {
+    animation: spin-dash 1s linear infinite;
+  }
+  @keyframes spin-dash {
+    0%   { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -152; }
+  }
+
+  /* Рипл-волны внутри лоадера */
+  #loader-ripple-1, #loader-ripple-2 {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,107,26,0.5);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+  #cta-loader.explode #loader-ripple-1 {
+    animation: ripple-out 0.7s ease-out forwards;
+  }
+  #cta-loader.explode #loader-ripple-2 {
+    animation: ripple-out 0.7s ease-out 0.15s forwards;
+  }
+  @keyframes ripple-out {
+    0%   { transform: translate(-50%, -50%) scale(1);  opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(4.5); opacity: 0; }
+  }
+
+  /* Сообщение об успехе */
+  #cta-success {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  #cta-success.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #success-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.15em;
+    color: #fff;
+  }
+  #success-line, #success-line2 {
+    height: 1px;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--orange));
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s ease 0.2s;
+  }
+  #success-line2 {
+    background: linear-gradient(90deg, var(--orange), transparent);
+    transform-origin: left;
+  }
+  #cta-success.visible #success-line,
+  #cta-success.visible #success-line2 {
+    transform: scaleX(1);
+  }
+
+  /* Shake для ошибки */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursor-trail"></div>
+
+
+<a href="#hero" class="to-top" id="to-top" aria-label="Наверх">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 17V7"></path>
+    <path d="M7.5 11.5 12 7l4.5 4.5"></path>
+  </svg>
+</a>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="lolgoC.png" alt="Tukan Web Studio">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#process">Процесс</a></li>
+    <li><a href="#portfolio">Портфолио</a></li>
+    <li><a href="#pricing">Тарифы</a></li>
+    <li><a href="#cta" class="nav-cta">Обсудить проект</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-content fade-up">
+      <div class="hero-label">Веб-студия нового поколения</div>
+      <h1 class="hero-title">
+        Сайты,<br>
+        которые<br>
+        <span>продают</span>
+      </h1>
+      <p class="hero-sub">Разрабатываем сайты, лендинги и веб-приложения, которые привлекают клиентов и работают на результат — с первого взгляда до конверсии.</p>
+      <div class="hero-btns">
+        <a href="#cta" class="btn-primary">Запустить проект</a>
+        <a href="#portfolio" class="btn-secondary">Смотреть работы</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-val">120<span>+</span></div>
+          <div class="stat-label">Проектов</div>
+        </div>
+        <div>
+          <div class="stat-val">5<span>★</span></div>
+          <div class="stat-label">Рейтинг</div>
+        </div>
+        <div>
+          <div class="stat-val">48<span>ч</span></div>
+          <div class="stat-label">Срок MVP</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual fade-up" style="transition-delay:0.2s">
+      <div class="hero-logo-wrap">
+        <div class="orbit-dot"></div>
+        <div class="orbit-dot"></div>
+        <div class="orbit-dot"></div>
+        <img src="logo.png" alt="Tukan">
+      </div>
+    </div>
+  </div>
+  <a href="#services" class="scroll-hint" id="scroll-hint" aria-label="Листать вниз к услугам">
+    <span>Листайте вниз</span>
+    <span class="scroll-hint-dot" aria-hidden="true"></span>
+  </a>
+
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header fade-up">
+    <div class="section-tag">Что мы делаем</div>
+    <h2 class="section-title">Наши <span>услуги</span></h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card fade-up">
+      <span class="service-num">01</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="17"></circle>
+          <path d="M7 24h34"></path>
+          <path d="M24 7c5 5 8 10.5 8 17s-3 12-8 17"></path>
+          <path d="M24 7c-5 5-8 10.5-8 17s3 12 8 17"></path>
+        </svg>
+      </span>
+      <h3 class="service-name">Корпоративные сайты</h3>
+      <p class="service-desc">Многостраничные сайты с уникальным дизайном, CMS и SEO-оптимизацией для роста органического трафика.</p>
+    </div>
+    <div class="service-card fade-up" style="transition-delay:0.1s">
+      <span class="service-num">02</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <rect x="8" y="9" width="32" height="30" rx="5"></rect>
+          <path d="M13 16h22"></path>
+          <path d="M16 30l6-6 4 4 7-8"></path>
+          <circle cx="33" cy="20" r="1.5"></circle>
+        </svg>
+      </span>
+      <h3 class="service-name">Лендинги</h3>
+      <p class="service-desc">Высококонверсионные посадочные страницы с A/B тестированием и аналитикой — запуск за 48 часов.</p>
+    </div>
+    <div class="service-card fade-up" style="transition-delay:0.2s">
+      <span class="service-num">03</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <circle cx="19" cy="36" r="2.5"></circle>
+          <circle cx="32" cy="36" r="2.5"></circle>
+          <path d="M7 11h6l3.5 16h17l3.5-11H14"></path>
+          <path d="M18 31h16"></path>
+        </svg>
+      </span>
+      <h3 class="service-name">Интернет-магазины</h3>
+      <p class="service-desc">Полнофункциональные e-commerce решения с каталогом, корзиной, оплатой и интеграцией с CRM.</p>
+    </div>
+    <div class="service-card fade-up" style="transition-delay:0.1s">
+      <span class="service-num">04</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <rect x="8" y="10" width="32" height="24" rx="4"></rect>
+          <path d="M28 38H20"></path>
+          <path d="M24 34v4"></path>
+          <path d="M26 15l-5 8h5l-4 7"></path>
+        </svg>
+      </span>
+      <h3 class="service-name">Веб-приложения</h3>
+      <p class="service-desc">SaaS-платформы, личные кабинеты, порталы на React, Vue с RESTful API и масштабируемой архитектурой.</p>
+    </div>
+    <div class="service-card fade-up" style="transition-delay:0.2s">
+      <span class="service-num">05</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <path d="M24 8c-8.8 0-16 6.2-16 13.8C8 29 14 34 20 34h2a4 4 0 014 4c0 1.7 1.4 3 3.1 3 6.3 0 10.9-6 10.9-13.2C40 16.3 33.2 8 24 8z"></path>
+          <circle cx="16" cy="20" r="1.8"></circle>
+          <circle cx="21" cy="16" r="1.8"></circle>
+          <circle cx="27" cy="16" r="1.8"></circle>
+          <circle cx="31" cy="21" r="1.8"></circle>
+        </svg>
+      </span>
+      <h3 class="service-name">UI/UX Дизайн</h3>
+      <p class="service-desc">Пользовательские исследования, прототипы, дизайн-системы и интерфейсы, которые понравятся людям.</p>
+    </div>
+    <div class="service-card fade-up" style="transition-delay:0.3s">
+      <span class="service-num">06</span>
+      <span class="service-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <path d="M29 11a8 8 0 00-9 10l-9.5 9.5a3 3 0 000 4.2l1.8 1.8a3 3 0 004.2 0L26 27a8 8 0 0010-9l-5 5-4-4 5-8z"></path>
+        </svg>
+      </span>
+      <h3 class="service-name">Поддержка и SEO</h3>
+      <p class="service-desc">Техническая поддержка 24/7, обновления, хостинг и продвижение для стабильного роста позиций.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-header fade-up">
+    <div class="section-tag">Как мы работаем</div>
+    <h2 class="section-title">Процесс <span>работы</span></h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step fade-up">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>Брифинг и исследование</h3>
+        <p>Проводим глубокий анализ вашего бизнеса, конкурентов и целевой аудитории. Определяем цели, KPI и техническое задание.</p>
+      </div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Проектирование и дизайн</h3>
+        <p>Создаём прототипы в Figma, разрабатываем уникальный дизайн и согласовываем каждый экран с вами до пикселя.</p>
+      </div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>Разработка</h3>
+        <p>Верстаем и программируем с использованием современного стека технологий. Адаптивность, скорость, безопасность — в приоритете.</p>
+      </div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h3>Тестирование и запуск</h3>
+        <p>Тщательное QA-тестирование на всех устройствах и браузерах. Плавный запуск с минимальным downtime и обучением команды.</p>
+      </div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <h3>Рост и поддержка</h3>
+        <p>Анализируем метрики, вносим улучшения и помогаем масштабировать бизнес. Вы не одни — мы ваш долгосрочный партнёр.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="section-header fade-up">
+    <div class="section-tag">Наши работы</div>
+    <h2 class="section-title">Порт<span>фолио</span></h2>
+  </div>
+  <div class="portfolio-carousel fade-up">
+    <button class="portfolio-arrow prev" id="portfolio-prev" aria-label="Предыдущий проект">❮</button>
+    <div class="portfolio-track-wrap">
+      <div class="portfolio-track" id="portfolio-track">
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="menubo.png" alt="TechCorp Solutions"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Информационный лендинг</div>
+            <div class="portfolio-title">MENUBO</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/900x1400/3A1800/FFFFFF?text=FashionStore" alt="FashionStore"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">E-commerce</div>
+            <div class="portfolio-title">FashionStore</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/1600x700/003520/FFFFFF?text=FinTrack+Pro" alt="FinTrack Pro"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">SaaS Dashboard</div>
+            <div class="portfolio-title">FinTrack Pro</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/800x1200/300040/FFFFFF?text=LaunchPad+Agency" alt="LaunchPad Agency"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Лендинг</div>
+            <div class="portfolio-title">LaunchPad Agency</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/2000x800/2A2000/FFFFFF?text=TastyDelivery" alt="TastyDelivery"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Food Delivery</div>
+            <div class="portfolio-title">TastyDelivery</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="portfolio-arrow next" id="portfolio-next" aria-label="Следующий проект">❯</button>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-header fade-up">
+    <div class="section-tag">Отзывы клиентов</div>
+    <h2 class="section-title">Говорят о <span>нас</span></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card fade-up">
+      <div class="quote-mark">"</div>
+      <p class="testimonial-text">Tukan сделали нам сайт за 3 недели — и это был самый быстрый запуск за всю историю нашей компании. Конверсия выросла на 40% в первый же месяц.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👨‍💼</div>
+        <div>
+          <div class="author-name">Алексей Петров</div>
+          <div class="author-role">CEO, TechStartup</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card fade-up" style="transition-delay:0.1s">
+      <div class="quote-mark">"</div>
+      <p class="testimonial-text">Профессиональный подход от начала до конца. Дизайн превзошёл все ожидания — это именно то, что мы хотели, только лучше.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👩‍💼</div>
+        <div>
+          <div class="author-name">Мария Козлова</div>
+          <div class="author-role">Директор по маркетингу, FashionBrand</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card fade-up" style="transition-delay:0.2s">
+      <div class="quote-mark">"</div>
+      <p class="testimonial-text">Отличная команда, которая слышит клиента. Наш интернет-магазин начал окупаться уже через 2 месяца после запуска. Рекомендую!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🧑‍🍳</div>
+        <div>
+          <div class="author-name">Дмитрий Волков</div>
+          <div class="author-role">Основатель, TastyDelivery</div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-header fade-up">
+    <div class="section-tag">Стоимость</div>
+    <h2 class="section-title">Тарифные <span>планы</span></h2>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <div class="pricing-name">Старт</div>
+      <div class="pricing-price"><small>от </small>30,000<small> ₽</small></div>
+      <div class="pricing-period">Идеально для малого бизнеса</div>
+      <ul class="pricing-features">
+        <li>Лендинг до 5 секций</li>
+        <li>Адаптивный дизайн</li>
+        <li>Базовое SEO</li>
+        <li>Форма обратной связи</li>
+        <li>Срок: 5–7 дней</li>
+        <li class="disabled">CMS / Панель управления</li>
+        <li class="disabled">Интеграции и API</li>
+      </ul>
+      <a href="#cta" class="btn-secondary" style="display:block;text-align:center">Выбрать</a>
+    </div>
+    <div class="pricing-card featured fade-up" style="transition-delay:0.1s">
+      <div class="pricing-badge">Популярный</div>
+      <div class="pricing-name">Бизнес</div>
+      <div class="pricing-price"><small>от </small>80,000<small> ₽</small></div>
+      <div class="pricing-period">Полноценный сайт для роста</div>
+      <ul class="pricing-features">
+        <li>Мультистраничный сайт</li>
+        <li>Уникальный UI/UX дизайн</li>
+        <li>CMS и панель управления</li>
+        <li>SEO-оптимизация</li>
+        <li>Интеграция с CRM / API</li>
+        <li>Срок: 2–3 недели</li>
+        <li class="disabled">Е-commerce модуль</li>
+      </ul>
+      <a href="#cta" class="btn-primary" style="display:block;text-align:center">Выбрать</a>
+    </div>
+    <div class="pricing-card fade-up" style="transition-delay:0.2s">
+      <div class="pricing-name">Премиум</div>
+      <div class="pricing-price"><small>от </small>180,000<small> ₽</small></div>
+      <div class="pricing-period">Для крупного бизнеса и e-commerce</div>
+      <ul class="pricing-features">
+        <li>Интернет-магазин / Веб-приложение</li>
+        <li>Дизайн-система</li>
+        <li>Личный кабинет</li>
+        <li>Платёжные интеграции</li>
+        <li>Расширенная аналитика</li>
+        <li>Поддержка 6 месяцев</li>
+        <li>Срок: 4–8 недель</li>
+      </ul>
+      <a href="#cta" class="btn-secondary" style="display:block;text-align:center">Выбрать</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner fade-up">
+    <h2 class="cta-title">Готовы стартовать<span>?</span></h2>
+    <p class="cta-sub">Оставьте заявку — мы свяжемся в течение 2 часов и предложим решение под ваш бюджет и цели.</p>
+
+    <div id="cta-form-wrap">
+      <div id="cta-pill">
+        <input type="text" class="cta-input" id="cta-contact" placeholder="Ваш телефон или e-mail">
+        <button class="btn-primary" id="cta-btn" onclick="sendToTelegram()">Отправить</button>
+      </div>
+      <!-- Кружок-лоадер (скрыт по умолчанию) -->
+      <div id="cta-loader">
+        <svg id="loader-ring" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="24" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+          <circle cx="30" cy="30" r="24" fill="none" stroke="#FF6B1A" stroke-width="3"
+                  stroke-linecap="round" stroke-dasharray="40 112" stroke-dashoffset="0"/>
+        </svg>
+        <div id="loader-ripple-1"></div>
+        <div id="loader-ripple-2"></div>
+      </div>
+      <!-- Сообщение об успехе -->
+      <div id="cta-success">
+        <div id="success-line"></div>
+        <span id="success-text">Заявка отправлена</span>
+        <div id="success-line2"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="lolgoC.png" alt="Tukan">
+  </div>
+  <ul class="footer-links">
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#portfolio">Работы</a></li>
+    <li><a href="#pricing">Тарифы</a></li>
+    <li><a href="blog.html">Блог</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Tukan Web Studio</div>
+  <a class="footer-social" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Наш Telegram">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21.7 3.2c-.4-.3-1-.4-1.6-.2L3.5 9.5c-.9.3-.9 1.6 0 1.9l3.9 1.3 1.4 4.6c.2.8 1.2 1 1.8.4l2.2-2.2 4.2 3.1c.6.4 1.5.1 1.7-.7l3-13.1c.1-.5-.1-1.1-.5-1.6zm-3 2.8-8 7.3-.3 3.1-.9-2.9-2.5-.9 11.7-4.5z"/>
+    </svg>
+  </a>
+</footer>
+
+<script>
+  // ─── Cursor ───
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  let mx = 0, my = 0, tx = 0, ty = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    cursor.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`;
+  });
+
+  // Плавное следование трейла через lerp
+  function animateTrail() {
+    tx += (mx - tx) * 0.12;
+    ty += (my - ty) * 0.12;
+    trail.style.transform = `translate(calc(${tx}px - 50%), calc(${ty}px - 50%))`;
+    requestAnimationFrame(animateTrail);
+  }
+  animateTrail();
+
+  // Hover-состояние на интерактивных элементах
+  document.querySelectorAll('a, button, .service-card, .portfolio-item, .cta-input').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.classList.add('is-hovering');
+      trail.classList.add('is-hovering');
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.classList.remove('is-hovering');
+      trail.classList.remove('is-hovering');
+    });
+  });
+
+  // ─── Interactive canvas background ───
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  let W, H;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  // Particle system
+  const PARTICLE_COUNT = 90;
+  const particles = [];
+
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init = false) {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.ox = this.x;
+      this.oy = this.y;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = (Math.random() - 0.5) * 0.3;
+      this.size = Math.random() * 2 + 0.5;
+      this.alpha = Math.random() * 0.5 + 0.1;
+      this.color = Math.random() < 0.5
+        ? `rgba(255, ${80 + Math.floor(Math.random() * 80)}, 26,`
+        : `rgba(255, ${180 + Math.floor(Math.random() * 75)}, 0,`;
+      this.life = 0;
+      this.maxLife = 200 + Math.random() * 400;
+      if (init) { this.life = Math.random() * this.maxLife; }
+    }
+    update() {
+      this.life++;
+      if (this.life > this.maxLife) { this.reset(); return; }
+      const dx = mouse.x - this.x;
+      const dy = mouse.y - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 200) {
+        const force = (200 - dist) / 200 * 0.015;
+        this.vx -= dx / dist * force;
+        this.vy -= dy / dist * force;
+      }
+      this.vx += (Math.random() - 0.5) * 0.02;
+      this.vy += (Math.random() - 0.5) * 0.02;
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+    }
+    draw() {
+      const progress = this.life / this.maxLife;
+      const alpha = this.alpha * Math.sin(progress * Math.PI);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.color + alpha + ')';
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+  // Connection lines
+  function drawConnections() {
+    const maxDist = 120;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.12;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(255, 107, 26, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Mouse glow
+  function drawMouseGlow() {
+    const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 180);
+    grad.addColorStop(0, 'rgba(255, 107, 26, 0.06)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    drawMouseGlow();
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawConnections();
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // ─── Scroll fade-in ───
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Trigger hero immediately
+  setTimeout(() => {
+    document.querySelectorAll('#hero .fade-up').forEach(el => el.classList.add('visible'));
+  }, 100);
+
+
+  const scrollHint = document.getElementById('scroll-hint');
+  const toTopBtn = document.getElementById('to-top');
+  const toggleScrollUi = () => {
+    const isScrolled = window.scrollY > 12;
+    if (scrollHint) scrollHint.classList.toggle('is-hidden', isScrolled);
+    if (toTopBtn) toTopBtn.classList.toggle('visible', isScrolled);
+  };
+  window.addEventListener('scroll', toggleScrollUi, { passive: true });
+  toggleScrollUi();
+
+  // ─── Portfolio carousel ───
+  const portfolioTrack = document.getElementById('portfolio-track');
+  const portfolioTrackWrap = document.querySelector('.portfolio-track-wrap');
+  const portfolioPrev = document.getElementById('portfolio-prev');
+  const portfolioNext = document.getElementById('portfolio-next');
+
+  if (portfolioTrack && portfolioTrackWrap && portfolioPrev && portfolioNext) {
+    const originalCount = portfolioTrack.children.length;
+    portfolioTrack.innerHTML += portfolioTrack.innerHTML;
+
+    let currentOffset = 0;
+    let targetOffset = 0;
+    let baseWidth = 1;
+    let step = 1;
+    let lastFrame = performance.now();
+    let pauseUntil = 0;
+    let nextAutoStepAt = Date.now() + 4200;
+
+    const wrapOffset = value => {
+      const mod = value % baseWidth;
+      return mod < 0 ? mod + baseWidth : mod;
+    };
+
+    const pauseAutoplay = () => {
+      pauseUntil = Date.now() + 30000;
+      nextAutoStepAt = pauseUntil + 4200;
+    };
+
+    const recalcCarousel = () => {
+      const styles = getComputedStyle(portfolioTrack);
+      const gap = parseFloat(styles.gap || styles.columnGap || 20);
+      const wrapStyles = getComputedStyle(portfolioTrackWrap);
+      const wrapInnerWidth = portfolioTrackWrap.clientWidth
+        - parseFloat(wrapStyles.paddingLeft || 0)
+        - parseFloat(wrapStyles.paddingRight || 0);
+      const itemWidth = (wrapInnerWidth - gap * 2) / 3;
+
+      portfolioTrack.querySelectorAll('.portfolio-item').forEach(item => {
+        item.style.flexBasis = `${itemWidth}px`;
+      });
+
+      step = itemWidth + gap;
+      baseWidth = Math.max(step * originalCount, 1);
+      currentOffset = wrapOffset(currentOffset);
+      targetOffset = currentOffset;
+      portfolioTrack.style.transform = `translate3d(${-currentOffset}px, 0, 0)`;
+    };
+
+    const stepByArrow = direction => {
+      targetOffset += step * direction;
+      pauseAutoplay();
+    };
+
+    portfolioPrev.addEventListener('click', () => stepByArrow(-1));
+    portfolioNext.addEventListener('click', () => stepByArrow(1));
+    window.addEventListener('resize', recalcCarousel);
+
+    recalcCarousel();
+
+    const animateCarousel = now => {
+      const dt = (now - lastFrame) / 1000;
+      lastFrame = now;
+      const nowTs = Date.now();
+
+      if (nowTs >= pauseUntil && nowTs >= nextAutoStepAt) {
+        targetOffset += step;
+        nextAutoStepAt = nowTs + 4200;
+      }
+
+      const diff = targetOffset - currentOffset;
+      currentOffset += diff * Math.min(1, dt * 8.5);
+
+      if (Math.abs(diff) < 0.04) {
+        currentOffset = targetOffset;
+      }
+
+      portfolioTrack.style.transform = `translate3d(${-wrapOffset(currentOffset)}px, 0, 0)`;
+      requestAnimationFrame(animateCarousel);
+    };
+
+    requestAnimationFrame(animateCarousel);
+  }
+
+  // ─── Telegram Bot ───
+  // Замените на ваши данные:
+  const TG_BOT_TOKEN = '8151747022:AAHVor-uWYU14rrhJIQRiYcnIr-dN3W3G-0';   // например: 7412345678:AAF...
+  const TG_CHAT_ID   = '624161982';     // например: 123456789
+
+  // ─── SEND ANIMATION ───
+  async function sendToTelegram() {
+    const input   = document.getElementById('cta-contact');
+    const value   = input.value.trim();
+
+    if (!value) {
+      input.style.animation = 'shake 0.4s ease';
+      input.style.borderColor = '#ff4444';
+      setTimeout(() => { input.style.animation = ''; input.style.borderColor = ''; }, 500);
+      return;
+    }
+
+    // Запускаем анимацию и запрос параллельно
+    const [ok] = await Promise.all([
+      sendTelegramRequest(value),
+      playFormAnimation()
+    ]);
+
+    if (ok) input.value = '';
+  }
+
+  async function sendTelegramRequest(value) {
+    const text = `Новая заявка с сайта Tukan Web Studio!\n\nКонтакт: ${value}\nВремя: ${new Date().toLocaleString('ru-RU')}`;
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text })
+      });
+      const data = await res.json();
+      return data.ok;
+    } catch (e) { return false; }
+  }
+
+  function playFormAnimation() {
+    return new Promise(resolve => {
+      const pill    = document.getElementById('cta-pill');
+      const loader  = document.getElementById('cta-loader');
+      const ring    = document.getElementById('loader-ring');
+      const success = document.getElementById('cta-success');
+
+      // ── Шаг 1: форма уходит ──
+      pill.classList.add('hidden');
+
+      // ── Шаг 2: появляется кружок-лоадер ──
+      setTimeout(() => {
+        loader.classList.add('visible');
+        ring.classList.add('spinning');
+      }, 280);
+
+      // ── Шаг 3: лоадер взрывается волной ──
+      // (ждём минимум 1.2с, чтобы лоадер был виден)
+      setTimeout(() => {
+        ring.classList.remove('spinning');
+        loader.classList.add('explode');
+      }, 1400);
+
+      // ── Шаг 4: появляется текст успеха ──
+      setTimeout(() => {
+        loader.classList.remove('visible', 'explode');
+        success.classList.add('visible');
+      }, 1850);
+
+      // ── Шаг 5: текст исчезает, форма возвращается ──
+      setTimeout(() => {
+        success.classList.remove('visible');
+      }, 3600);
+
+      setTimeout(() => {
+        pill.classList.remove('hidden');
+        resolve();
+      }, 4000);
+    });
+  }
+</script>
+</body>
+</html>
