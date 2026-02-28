@@ -628,45 +628,61 @@
     background: rgba(255,107,26,0.02);
   }
 
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto auto;
-    gap: 20px;
-    max-width: 1200px;
+  .portfolio-carousel {
+    max-width: 1360px;
     margin: 0 auto;
+    position: relative;
+    padding: 0 56px;
+  }
+
+  .portfolio-track-wrap {
+    overflow: hidden;
+    border-radius: 12px;
+    padding: 16px 14px;
+  }
+
+  .portfolio-track {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    will-change: transform;
   }
 
   .portfolio-item {
     background: var(--dark3);
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,107,26,0.45);
     border-radius: 10px;
     overflow: hidden;
     position: relative;
     aspect-ratio: 4/3;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-  }
-
-  .portfolio-item:first-child {
-    grid-column: span 2;
-    aspect-ratio: 16/7;
+    flex: 0 0 calc((100% - 40px) / 3);
   }
 
   .portfolio-item:hover {
     transform: scale(1.02);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(255,107,26,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 36px rgba(255,107,26,0.2);
   }
 
   .portfolio-bg {
-    width: 100%; height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 60px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #151515;
+  }
+
+  .portfolio-bg img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1);
     transition: transform 0.4s;
   }
-  .portfolio-item:hover .portfolio-bg { transform: scale(1.08); }
+
+  .portfolio-item:hover .portfolio-bg img { transform: scale(1.08); }
 
   .portfolio-overlay {
     position: absolute;
@@ -696,6 +712,31 @@
     color: #fff;
     letter-spacing: 0.04em;
   }
+
+  .portfolio-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(17,17,17,0.88);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    z-index: 2;
+  }
+  .portfolio-arrow:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: rgba(26,26,26,0.96);
+  }
+  .portfolio-arrow.prev { left: 8px; }
+  .portfolio-arrow.next { right: 8px; }
 
   /* TESTIMONIALS */
   #testimonials {
@@ -995,6 +1036,28 @@
     color: var(--text-muted);
   }
 
+  .footer-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .footer-social:hover {
+    color: var(--orange);
+    border-color: var(--orange);
+    transform: translateY(-2px);
+  }
+  .footer-social svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
   /* Scroll animations */
   .fade-up {
     opacity: 0;
@@ -1017,8 +1080,9 @@
     .to-top { right: 16px; bottom: 16px; width: 42px; height: 42px; }
     #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
     .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
-    .portfolio-grid { grid-template-columns: 1fr; }
-    .portfolio-item:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+    .portfolio-carousel { padding: 0 48px; }
+    .portfolio-item { flex-basis: 84vw; max-width: 520px; }
+    .portfolio-arrow { width: 40px; height: 40px; }
     footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
     .footer-links { flex-wrap: wrap; justify-content: center; }
     .cta-form { flex-direction: column; }
@@ -1368,42 +1432,48 @@
     <div class="section-tag">Наши работы</div>
     <h2 class="section-title">Порт<span>фолио</span></h2>
   </div>
-  <div class="portfolio-grid">
-    <div class="portfolio-item fade-up">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #0D1B2A, #1B3A4B);">🏢</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Корпоративный сайт</div>
-        <div class="portfolio-title">TechCorp Solutions</div>
+  <div class="portfolio-carousel fade-up">
+    <button class="portfolio-arrow prev" id="portfolio-prev" aria-label="Предыдущий проект">❮</button>
+    <div class="portfolio-track-wrap">
+      <div class="portfolio-track" id="portfolio-track">
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="menubo.png" alt="TechCorp Solutions"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Информационный лендинг</div>
+            <div class="portfolio-title">MENUBO</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/900x1400/3A1800/FFFFFF?text=FashionStore" alt="FashionStore"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">E-commerce</div>
+            <div class="portfolio-title">FashionStore</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/1600x700/003520/FFFFFF?text=FinTrack+Pro" alt="FinTrack Pro"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">SaaS Dashboard</div>
+            <div class="portfolio-title">FinTrack Pro</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/800x1200/300040/FFFFFF?text=LaunchPad+Agency" alt="LaunchPad Agency"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Лендинг</div>
+            <div class="portfolio-title">LaunchPad Agency</div>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-bg"><img src="https://placehold.co/2000x800/2A2000/FFFFFF?text=TastyDelivery" alt="TastyDelivery"></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Food Delivery</div>
+            <div class="portfolio-title">TastyDelivery</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="portfolio-item fade-up">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0A00, #3A1800);">🛍️</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">E-commerce</div>
-        <div class="portfolio-title">FashionStore</div>
-      </div>
-    </div>
-    <div class="portfolio-item fade-up" style="transition-delay:0.1s">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #001A0A, #003520);">📊</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">SaaS Dashboard</div>
-        <div class="portfolio-title">FinTrack Pro</div>
-      </div>
-    </div>
-    <div class="portfolio-item fade-up" style="transition-delay:0.2s">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A0020, #300040);">🚀</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Лендинг</div>
-        <div class="portfolio-title">LaunchPad Agency</div>
-      </div>
-    </div>
-    <div class="portfolio-item fade-up" style="transition-delay:0.3s">
-      <div class="portfolio-bg" style="background: linear-gradient(135deg, #1A1000, #2A2000);">🍕</div>
-      <div class="portfolio-overlay">
-        <div class="portfolio-cat">Food Delivery</div>
-        <div class="portfolio-title">TastyDelivery</div>
-      </div>
-    </div>
+    <button class="portfolio-arrow next" id="portfolio-next" aria-label="Следующий проект">❯</button>
   </div>
 </section>
 
@@ -1553,6 +1623,11 @@
     <li><a href="blog.html">Блог</a></li>
   </ul>
   <div class="footer-copy">© 2026 Tukan Web Studio</div>
+  <a class="footer-social" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Наш Telegram">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21.7 3.2c-.4-.3-1-.4-1.6-.2L3.5 9.5c-.9.3-.9 1.6 0 1.9l3.9 1.3 1.4 4.6c.2.8 1.2 1 1.8.4l2.2-2.2 4.2 3.1c.6.4 1.5.1 1.7-.7l3-13.1c.1-.5-.1-1.1-.5-1.6zm-3 2.8-8 7.3-.3 3.1-.9-2.9-2.5-.9 11.7-4.5z"/>
+    </svg>
+  </a>
 </footer>
 
 <script>
@@ -1726,6 +1801,89 @@
   };
   window.addEventListener('scroll', toggleScrollUi, { passive: true });
   toggleScrollUi();
+
+  // ─── Portfolio carousel ───
+  const portfolioTrack = document.getElementById('portfolio-track');
+  const portfolioTrackWrap = document.querySelector('.portfolio-track-wrap');
+  const portfolioPrev = document.getElementById('portfolio-prev');
+  const portfolioNext = document.getElementById('portfolio-next');
+
+  if (portfolioTrack && portfolioTrackWrap && portfolioPrev && portfolioNext) {
+    const originalCount = portfolioTrack.children.length;
+    portfolioTrack.innerHTML += portfolioTrack.innerHTML;
+
+    let currentOffset = 0;
+    let targetOffset = 0;
+    let baseWidth = 1;
+    let step = 1;
+    let lastFrame = performance.now();
+    let pauseUntil = 0;
+    let nextAutoStepAt = Date.now() + 4200;
+
+    const wrapOffset = value => {
+      const mod = value % baseWidth;
+      return mod < 0 ? mod + baseWidth : mod;
+    };
+
+    const pauseAutoplay = () => {
+      pauseUntil = Date.now() + 30000;
+      nextAutoStepAt = pauseUntil + 4200;
+    };
+
+    const recalcCarousel = () => {
+      const styles = getComputedStyle(portfolioTrack);
+      const gap = parseFloat(styles.gap || styles.columnGap || 20);
+      const wrapStyles = getComputedStyle(portfolioTrackWrap);
+      const wrapInnerWidth = portfolioTrackWrap.clientWidth
+        - parseFloat(wrapStyles.paddingLeft || 0)
+        - parseFloat(wrapStyles.paddingRight || 0);
+      const itemWidth = (wrapInnerWidth - gap * 2) / 3;
+
+      portfolioTrack.querySelectorAll('.portfolio-item').forEach(item => {
+        item.style.flexBasis = `${itemWidth}px`;
+      });
+
+      step = itemWidth + gap;
+      baseWidth = Math.max(step * originalCount, 1);
+      currentOffset = wrapOffset(currentOffset);
+      targetOffset = currentOffset;
+      portfolioTrack.style.transform = `translate3d(${-currentOffset}px, 0, 0)`;
+    };
+
+    const stepByArrow = direction => {
+      targetOffset += step * direction;
+      pauseAutoplay();
+    };
+
+    portfolioPrev.addEventListener('click', () => stepByArrow(-1));
+    portfolioNext.addEventListener('click', () => stepByArrow(1));
+    window.addEventListener('resize', recalcCarousel);
+
+    recalcCarousel();
+
+    const animateCarousel = now => {
+      const dt = (now - lastFrame) / 1000;
+      lastFrame = now;
+      const nowTs = Date.now();
+
+      if (nowTs >= pauseUntil && nowTs >= nextAutoStepAt) {
+        targetOffset += step;
+        nextAutoStepAt = nowTs + 4200;
+      }
+
+      const diff = targetOffset - currentOffset;
+      currentOffset += diff * Math.min(1, dt * 8.5);
+
+      if (Math.abs(diff) < 0.04) {
+        currentOffset = targetOffset;
+      }
+
+      portfolioTrack.style.transform = `translate3d(${-wrapOffset(currentOffset)}px, 0, 0)`;
+      requestAnimationFrame(animateCarousel);
+    };
+
+    requestAnimationFrame(animateCarousel);
+  }
 
   // ─── Telegram Bot ───
   // Замените на ваши данные:

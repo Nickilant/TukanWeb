@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Блог — Tukan Web Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --orange: #FF6B1A;
@@ -15,33 +15,36 @@
     --dark3: #1A1A1A;
     --text: #E8E8E8;
     --text-muted: #9A9A9A;
+    --line: rgba(255,255,255,0.1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Montserrat', sans-serif;
-    background: radial-gradient(circle at top, rgba(255,107,26,0.08), transparent 35%), var(--dark);
     color: var(--text);
-    min-height: 100vh;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255,107,26,0.18), transparent 36%),
+      radial-gradient(circle at 90% 20%, rgba(255,140,66,0.1), transparent 28%),
+      var(--dark);
+    line-height: 1.6;
   }
 
   .wrap {
-    max-width: 1040px;
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 36px 24px 80px;
+    padding: 32px 24px 80px;
   }
 
   .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 48px;
+    margin-bottom: 44px;
   }
 
   .logo img {
-    height: 62px;
-    width: auto;
+    height: 64px;
     filter: drop-shadow(0 0 8px rgba(255,107,26,0.45));
   }
 
@@ -60,78 +63,233 @@
   .btn-back:hover { border-color: var(--orange); color: var(--orange); }
 
   .hero {
-    margin-bottom: 38px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .hero-main,
+  .hero-news {
+    background: rgba(17,17,17,0.95);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px;
   }
 
   .tag {
     color: var(--orange);
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
-    margin-bottom: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
   }
 
   h1 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 8vw, 84px);
-    line-height: 0.95;
+    font-size: clamp(50px, 8vw, 88px);
     letter-spacing: 0.02em;
+    line-height: 0.95;
     margin-bottom: 16px;
   }
 
-  .sub {
-    max-width: 680px;
+  .hero-main p {
     color: var(--text-muted);
-    line-height: 1.7;
+    max-width: 680px;
   }
+
+  .hero-news h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 16px;
+    color: var(--orange);
+  }
+
+  .news-list {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+  }
+
+  .news-list li {
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .news-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+  .news-title {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .news-title:hover { color: var(--orange); }
+
+  .news-meta {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+  }
+
+  .featured {
+    background: linear-gradient(145deg, rgba(255,107,26,0.14), rgba(17,17,17,0.92));
+    border: 1px solid rgba(255,107,26,0.35);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .post-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffd8c4;
+    margin-bottom: 12px;
+  }
+
+  .featured h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 46px;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    color: rgba(255,255,255,0.8);
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
+  .featured p {
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 18px;
+  }
+
+  .read-more {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .read-more:hover { color: var(--orange); }
 
   .posts {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
-    margin-top: 28px;
   }
 
   .post {
     background: var(--dark3);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
-    padding: 24px;
-    min-height: 190px;
+    padding: 22px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    min-height: 230px;
   }
 
-  .post-date {
+  .post .post-label {
     color: var(--orange);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 700;
+    margin-bottom: 10px;
   }
 
-  .post h2 {
+  .post h3 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    letter-spacing: 0.03em;
+    font-size: 34px;
     line-height: 1;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
   }
 
   .post p {
     color: var(--text-muted);
-    line-height: 1.65;
+    margin-bottom: 14px;
     font-size: 14px;
   }
 
-  .placeholder {
-    border-style: dashed;
-    justify-content: center;
-    align-items: flex-start;
+  .sidebar-card {
+    background: var(--dark2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
   }
 
-  @media (max-width: 860px) {
+  .sidebar-card h4 {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--orange);
+  }
+
+  .topics,
+  .popular {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .topics a,
+  .popular a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .topics a:hover,
+  .popular a:hover { color: var(--orange); }
+
+  .newsletter p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .newsletter input {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: #0e0e0e;
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .newsletter button {
+    width: 100%;
+    border: 0;
+    background: var(--orange);
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .newsletter button:hover { background: var(--orange-light); }
+
+  @media (max-width: 980px) {
+    .hero,
+    .layout {
+      grid-template-columns: 1fr;
+    }
+
     .posts { grid-template-columns: 1fr; }
     .topbar { margin-bottom: 30px; }
   }
@@ -147,24 +305,104 @@
     </div>
 
     <header class="hero">
-      <div class="tag">Tukan Blog</div>
-      <h1>Блог студии</h1>
-      <p class="sub">Здесь можно публиковать статьи, кейсы, разборы проектов, SEO-советы и заметки по разработке. Карточки ниже — шаблон, который можно легко редактировать и дополнять новыми материалами.</p>
+      <div class="hero-main">
+        <div class="tag">Tukan Blog</div>
+        <h1>Блог студии</h1>
+        <p>Публикуем разборы кейсов, SEO-советы, подходы к дизайну и практики разработки, которые реально влияют на заявки и продажи. Это не «новости ради новостей», а рабочие материалы для бизнеса.</p>
+      </div>
+      <aside class="hero-news">
+        <h3>Свежие публикации</h3>
+        <ul class="news-list">
+          <li>
+            <a class="news-title" href="#">Как оформить лендинг, чтобы снизить стоимость заявки</a>
+            <div class="news-meta">14 января 2026 · 6 минут</div>
+          </li>
+          <li>
+            <a class="news-title" href="#">5 ошибок в структуре сайта, из-за которых падает конверсия</a>
+            <div class="news-meta">12 января 2026 · 8 минут</div>
+          </li>
+          <li>
+            <a class="news-title" href="#">Кейс: редизайн для b2b-сервиса и рост заявок на 37%</a>
+            <div class="news-meta">9 января 2026 · 7 минут</div>
+          </li>
+        </ul>
+      </aside>
     </header>
 
-    <section class="posts">
-      <article class="post">
-        <div class="post-date">Черновик</div>
-        <h2>Как мы запускаем MVP за 48 часов</h2>
-        <p>Пошагово разберём процесс: бриф, прототип, визуал, разработка и запуск. Отличная основа для первой статьи.</p>
-      </article>
+    <div class="layout">
+      <main>
+        <article class="featured">
+          <div class="post-label">Рекомендуем к чтению</div>
+          <h2>Как мы запускаем MVP за 48 часов: от идеи до первых лидов</h2>
+          <div class="post-meta">
+            <span>Автор: Tukan Team</span>
+            <span>16 января 2026</span>
+            <span>10 минут чтения</span>
+          </div>
+          <p>Разбираем реальный внутренний процесс: мини-исследование ниши, быстрое прототипирование, копирайтинг под оффер, дизайн первого экрана и запуск на рабочий домен. Внутри — чек-лист того, что действительно важно в первые 2 дня.</p>
+          <a class="read-more" href="#">Читать статью</a>
+        </article>
 
-      <article class="post placeholder">
-        <div class="post-date">Новая публикация</div>
-        <h2>Добавьте сюда следующую статью</h2>
-        <p>Скопируйте карточку, поменяйте заголовок, дату и текст. При желании можно позже сделать отдельные страницы каждой статьи.</p>
-      </article>
-    </section>
+        <section class="posts">
+          <article class="post">
+            <div class="post-label">SEO</div>
+            <h3>Локальное SEO для услуг: что сделать за неделю</h3>
+            <p>Набор простых действий для малого бизнеса: от структуры страниц до оптимизации Google Business Profile и контент-плана на месяц.</p>
+            <a class="read-more" href="#">Читать</a>
+          </article>
+
+          <article class="post">
+            <div class="post-label">Дизайн</div>
+            <h3>Как собрать сильный первый экран лендинга</h3>
+            <p>Что писать в заголовке, как расположить CTA-кнопки и какие блоки лучше добавить сразу после hero-секции.</p>
+            <a class="read-more" href="#">Читать</a>
+          </article>
+
+          <article class="post">
+            <div class="post-label">Кейсы</div>
+            <h3>Сайт для производства: +29% заявок за 2 месяца</h3>
+            <p>Показываем, как новая архитектура страниц, фильтры кейсов и контент для отдела продаж усилили лидогенерацию.</p>
+            <a class="read-more" href="#">Читать</a>
+          </article>
+
+          <article class="post">
+            <div class="post-label">Разработка</div>
+            <h3>Чек-лист перед запуском сайта: 21 обязательный пункт</h3>
+            <p>Техническая и маркетинговая проверка перед релизом: аналитика, формы, скорость, SEO-метки и безопасность.</p>
+            <a class="read-more" href="#">Читать</a>
+          </article>
+        </section>
+      </main>
+
+      <aside>
+        <div class="sidebar-card">
+          <h4>Темы</h4>
+          <ul class="topics">
+            <li><a href="#">Лендинги</a></li>
+            <li><a href="#">SEO и продвижение</a></li>
+            <li><a href="#">UX/UI дизайн</a></li>
+            <li><a href="#">Веб-разработка</a></li>
+            <li><a href="#">Кейсы клиентов</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h4>Популярное</h4>
+          <ul class="popular">
+            <li><a href="#">Сколько стоит современный сайт в 2026 году</a></li>
+            <li><a href="#">Какие блоки реально продают на лендинге</a></li>
+            <li><a href="#">Почему формы «Имя + телефон» уже не работают</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card newsletter">
+          <h4>Подписка</h4>
+          <p>Получайте новые статьи по росту конверсии и развитию сайта раз в неделю.</p>
+          <input type="email" placeholder="Ваш e-mail">
+          <button type="button">Подписаться</button>
+        </div>
+      </aside>
+    </div>
   </div>
 </body>
 </html>
