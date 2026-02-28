@@ -629,10 +629,10 @@
   }
 
   .portfolio-carousel {
-    max-width: 1200px;
+    max-width: 1260px;
     margin: 0 auto;
     position: relative;
-    padding: 0 64px;
+    padding: 0 56px;
   }
 
   .portfolio-track-wrap {
@@ -656,7 +656,7 @@
     aspect-ratio: 4/3;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-    flex: 0 0 clamp(340px, 38vw, 520px);
+    flex: 0 0 calc((100% - 40px) / 3);
   }
 
   .portfolio-item:hover {
@@ -1070,8 +1070,8 @@
     .to-top { right: 16px; bottom: 16px; width: 42px; height: 42px; }
     #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
     .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
-    .portfolio-carousel { padding: 0 52px; }
-    .portfolio-item { flex-basis: 88vw; max-width: 500px; }
+    .portfolio-carousel { padding: 0 48px; }
+    .portfolio-item { flex-basis: 84vw; max-width: 520px; }
     .portfolio-arrow { width: 40px; height: 40px; }
     footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
     .footer-links { flex-wrap: wrap; justify-content: center; }
