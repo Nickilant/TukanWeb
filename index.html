@@ -1794,45 +1794,50 @@
 
   // ─── Portfolio carousel ───
   const portfolioTrack = document.getElementById('portfolio-track');
+  const portfolioTrackWrap = document.querySelector('.portfolio-track-wrap');
   const portfolioPrev = document.getElementById('portfolio-prev');
   const portfolioNext = document.getElementById('portfolio-next');
 
-  if (portfolioTrack && portfolioPrev && portfolioNext) {
+  if (portfolioTrack && portfolioTrackWrap && portfolioPrev && portfolioNext) {
     const originalCount = portfolioTrack.children.length;
     portfolioTrack.innerHTML += portfolioTrack.innerHTML;
 
     let currentOffset = 0;
     let targetOffset = 0;
     let baseWidth = 1;
+    let step = 1;
     let lastFrame = performance.now();
     let pauseUntil = 0;
-    const speed = 18; // px per second
+    let nextAutoStepAt = Date.now() + 4200;
 
     const wrapOffset = value => {
       const mod = value % baseWidth;
       return mod < 0 ? mod + baseWidth : mod;
     };
 
+    const pauseAutoplay = () => {
+      pauseUntil = Date.now() + 30000;
+      nextAutoStepAt = pauseUntil + 4200;
+    };
+
     const recalcCarousel = () => {
-      const firstItem = portfolioTrack.querySelector('.portfolio-item');
       const styles = getComputedStyle(portfolioTrack);
       const gap = parseFloat(styles.gap || styles.columnGap || 20);
-      const itemWidth = firstItem ? firstItem.getBoundingClientRect().width : 320;
-      baseWidth = Math.max((itemWidth + gap) * originalCount, 1);
+      const wrapWidth = portfolioTrackWrap.clientWidth;
+      const itemWidth = (wrapWidth - gap * 2) / 3;
+
+      portfolioTrack.querySelectorAll('.portfolio-item').forEach(item => {
+        item.style.flexBasis = `${itemWidth}px`;
+      });
+
+      step = itemWidth + gap;
+      baseWidth = Math.max(step * originalCount, 1);
       currentOffset = wrapOffset(currentOffset);
       targetOffset = currentOffset;
       portfolioTrack.style.transform = `translate3d(${-currentOffset}px, 0, 0)`;
     };
 
-    const pauseAutoplay = () => {
-      pauseUntil = Date.now() + 30000;
-    };
-
     const stepByArrow = direction => {
-      const firstItem = portfolioTrack.querySelector('.portfolio-item');
-      const styles = getComputedStyle(portfolioTrack);
-      const gap = parseFloat(styles.gap || styles.columnGap || 20);
-      const step = (firstItem ? firstItem.getBoundingClientRect().width : 320) + gap;
       targetOffset += step * direction;
       pauseAutoplay();
     };
@@ -1846,15 +1851,17 @@
     const animateCarousel = now => {
       const dt = (now - lastFrame) / 1000;
       lastFrame = now;
+      const nowTs = Date.now();
 
-      if (Date.now() >= pauseUntil) {
-        targetOffset += speed * dt;
+      if (nowTs >= pauseUntil && nowTs >= nextAutoStepAt) {
+        targetOffset += step;
+        nextAutoStepAt = nowTs + 4200;
       }
 
       const diff = targetOffset - currentOffset;
-      currentOffset += diff * 0.12;
+      currentOffset += diff * Math.min(1, dt * 8.5);
 
-      if (Math.abs(diff) < 0.02) {
+      if (Math.abs(diff) < 0.04) {
         currentOffset = targetOffset;
       }
 
