@@ -656,7 +656,7 @@
     aspect-ratio: 4/3;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-    flex: 0 0 clamp(260px, 30vw, 360px);
+    flex: 0 0 clamp(340px, 38vw, 520px);
   }
 
   .portfolio-item:hover {
@@ -1071,7 +1071,7 @@
     #services, #process, #portfolio, #testimonials, #pricing, #cta { padding: 80px 24px; }
     .services-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
     .portfolio-carousel { padding: 0 52px; }
-    .portfolio-item { flex-basis: 80vw; max-width: 360px; }
+    .portfolio-item { flex-basis: 88vw; max-width: 500px; }
     .portfolio-arrow { width: 40px; height: 40px; }
     footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
     .footer-links { flex-wrap: wrap; justify-content: center; }
@@ -1798,46 +1798,47 @@
   const portfolioNext = document.getElementById('portfolio-next');
 
   if (portfolioTrack && portfolioPrev && portfolioNext) {
-    const ORIGINAL_ITEMS = Array.from(portfolioTrack.children);
+    const originalCount = portfolioTrack.children.length;
     portfolioTrack.innerHTML += portfolioTrack.innerHTML;
 
-    let offset = 0;
+    let currentOffset = 0;
+    let targetOffset = 0;
     let baseWidth = 1;
     let lastFrame = performance.now();
     let pauseUntil = 0;
     const speed = 18; // px per second
 
-    const normalizeOffset = () => {
-      while (offset >= baseWidth) offset -= baseWidth;
-      while (offset < 0) offset += baseWidth;
+    const wrapOffset = value => {
+      const mod = value % baseWidth;
+      return mod < 0 ? mod + baseWidth : mod;
     };
 
     const recalcCarousel = () => {
       const firstItem = portfolioTrack.querySelector('.portfolio-item');
-      const gap = parseFloat(getComputedStyle(portfolioTrack).columnGap || getComputedStyle(portfolioTrack).gap || 20);
+      const styles = getComputedStyle(portfolioTrack);
+      const gap = parseFloat(styles.gap || styles.columnGap || 20);
       const itemWidth = firstItem ? firstItem.getBoundingClientRect().width : 320;
-      const total = (itemWidth + gap) * ORIGINAL_ITEMS.length;
-      baseWidth = Math.max(total, 1);
-      normalizeOffset();
-      portfolioTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+      baseWidth = Math.max((itemWidth + gap) * originalCount, 1);
+      currentOffset = wrapOffset(currentOffset);
+      targetOffset = currentOffset;
+      portfolioTrack.style.transform = `translate3d(${-currentOffset}px, 0, 0)`;
     };
 
     const pauseAutoplay = () => {
       pauseUntil = Date.now() + 30000;
     };
 
-    const moveByStep = dir => {
+    const stepByArrow = direction => {
       const firstItem = portfolioTrack.querySelector('.portfolio-item');
-      const gap = parseFloat(getComputedStyle(portfolioTrack).columnGap || getComputedStyle(portfolioTrack).gap || 20);
+      const styles = getComputedStyle(portfolioTrack);
+      const gap = parseFloat(styles.gap || styles.columnGap || 20);
       const step = (firstItem ? firstItem.getBoundingClientRect().width : 320) + gap;
-      offset += step * dir;
-      normalizeOffset();
-      portfolioTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+      targetOffset += step * direction;
       pauseAutoplay();
     };
 
-    portfolioPrev.addEventListener('click', () => moveByStep(-1));
-    portfolioNext.addEventListener('click', () => moveByStep(1));
+    portfolioPrev.addEventListener('click', () => stepByArrow(-1));
+    portfolioNext.addEventListener('click', () => stepByArrow(1));
     window.addEventListener('resize', recalcCarousel);
 
     recalcCarousel();
@@ -1847,11 +1848,17 @@
       lastFrame = now;
 
       if (Date.now() >= pauseUntil) {
-        offset += speed * dt;
-        normalizeOffset();
-        portfolioTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+        targetOffset += speed * dt;
       }
 
+      const diff = targetOffset - currentOffset;
+      currentOffset += diff * 0.12;
+
+      if (Math.abs(diff) < 0.02) {
+        currentOffset = targetOffset;
+      }
+
+      portfolioTrack.style.transform = `translate3d(${-wrapOffset(currentOffset)}px, 0, 0)`;
       requestAnimationFrame(animateCarousel);
     };
 
