@@ -995,6 +995,28 @@
     color: var(--text-muted);
   }
 
+  .footer-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .footer-social:hover {
+    color: var(--orange);
+    border-color: var(--orange);
+    transform: translateY(-2px);
+  }
+  .footer-social svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
   /* Scroll animations */
   .fade-up {
     opacity: 0;
@@ -1553,6 +1575,11 @@
     <li><a href="blog.html">Блог</a></li>
   </ul>
   <div class="footer-copy">© 2026 Tukan Web Studio</div>
+  <a class="footer-social" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Наш Telegram">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21.7 3.2c-.4-.3-1-.4-1.6-.2L3.5 9.5c-.9.3-.9 1.6 0 1.9l3.9 1.3 1.4 4.6c.2.8 1.2 1 1.8.4l2.2-2.2 4.2 3.1c.6.4 1.5.1 1.7-.7l3-13.1c.1-.5-.1-1.1-.5-1.6zm-3 2.8-8 7.3-.3 3.1-.9-2.9-2.5-.9 11.7-4.5z"/>
+    </svg>
+  </a>
 </footer>
 
 <script>
