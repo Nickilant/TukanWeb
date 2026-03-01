@@ -14,6 +14,7 @@ cp .env.example .env
 
 - `VITE_TG_BOT_TOKEN` — токен Telegram-бота.
 - `VITE_TG_CHAT_ID` — ID пользователя/чата в Telegram.
+- `VITE_HIDE_PORTFOLIO` — скрыть блок портфолио (`true`/`false`).
 
 3. Запустите проект:
 
@@ -55,6 +56,7 @@ npm run dev -- --host 0.0.0.0 --port 4173
 ```env
 VITE_TG_BOT_TOKEN=...
 VITE_TG_CHAT_ID=...
+VITE_HIDE_PORTFOLIO=false
 ```
 
 В коде они читаются в `src/landing-script.js` через `import.meta.env`.

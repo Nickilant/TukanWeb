@@ -9,6 +9,25 @@ export function initLanding() {
     cleanups.push(() => document.removeEventListener(event, handler, options));
   };
 
+
+  const isPortfolioHidden = ['1', 'true', 'yes', 'on'].includes(
+    String(import.meta.env.VITE_HIDE_PORTFOLIO || '').toLowerCase(),
+  );
+
+  if (isPortfolioHidden) {
+    const portfolioSection = document.getElementById('portfolio');
+    if (portfolioSection) portfolioSection.style.display = 'none';
+
+    document.querySelectorAll('a[href="#portfolio"]').forEach((link) => {
+      const parentLi = link.closest('li');
+      if (parentLi) {
+        parentLi.style.display = 'none';
+      } else {
+        link.style.display = 'none';
+      }
+    });
+  }
+
   const cursor = document.getElementById('cursor');
   const trail = document.getElementById('cursor-trail');
   let mx = 0, my = 0, tx = 0, ty = 0;
