@@ -1,0 +1,7 @@
+services:
+  tukan-landing:
+    build: .
+    ports:
+      - "8088:4173"
+    env_file:
+      - .env
